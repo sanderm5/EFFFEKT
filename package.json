@@ -1,0 +1,16 @@
+{
+  "name": "efffekt-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "node ./node_modules/astro/astro.js dev",
+    "build": "node ./node_modules/astro/astro.js build",
+    "preview": "node ./node_modules/astro/astro.js preview",
+    "astro": "node ./node_modules/astro/astro.js"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/vercel": "^9.0.4",
+    "astro": "^5.16.11"
+  }
+}

@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Scanner from '../components/home/Scanner.astro';
+import Team from '../components/home/Team.astro';
+import Services from '../components/home/Services.astro';
+import CaseStudy from '../components/home/CaseStudy.astro';
+import Contact from '../components/home/Contact.astro';
+import PromoPopup from '../components/home/PromoPopup.astro';
+---
+
+<BaseLayout
+  title="EFFFEKT | Nettsider, Systemer & AI for Bedrifter"
+  description="Tre utviklere som bygger nettsider, webapplikasjoner og AI-løsninger for norske bedrifter. Fastpris. Gratis demo."
+>
+  <Hero />
+  <Scanner />
+  <Team />
+  <Services />
+  <CaseStudy />
+  <Contact />
+  <PromoPopup />
+</BaseLayout>
+
+<script>
+  function initHomePage() {
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
+        if (href) {
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelector('.nav-links')?.classList.remove('active');
+            document.querySelector('.nav-toggle')?.classList.remove('active');
+          }
+        }
+      });
+    });
+
+    // Scroll reveal animations
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealOnScroll = () => {
+      const windowHeight = window.innerHeight;
+      revealElements.forEach(el => {
+        const elementTop = el.getBoundingClientRect().top;
+        const revealPoint = 100;
+        if (elementTop < windowHeight - revealPoint) {
+          el.classList.add('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Run on load
+  }
+
+  // Run on initial load and after View Transitions
+  initHomePage();
+  document.addEventListener('astro:page-load', initHomePage);
+</script>

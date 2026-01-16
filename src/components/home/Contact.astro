@@ -1,0 +1,79 @@
+---
+// Contact section component
+import { Image } from 'astro:assets';
+import sanderImg from '../../assets/sander.jpg';
+import danielImg from '../../assets/daniel.jpg';
+// import michaelImg from '../../assets/michael.jpg'; // MIDLERTIDIG SKJULT
+---
+
+<section id="kontakt" class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-label">Ta kontakt</p>
+        <h2>La oss snakke om<br>ditt <span class="text-accent">prosjekt</span></h2>
+        <p class="contact-text">
+          Fyll ut skjemaet eller ring oss direkte. Vi svarer vanligvis innen 24 timer.
+        </p>
+        <div class="contact-methods">
+        </div>
+
+        <div class="contact-people">
+          <h4>Snakk med oss direkte</h4>
+          <!-- MIDLERTIDIG SKJULT - MICHAEL: contact-person blokk -->
+          <div class="contact-person">
+            <Image src={sanderImg} alt="Sander Martinsen" class="contact-avatar" width={48} height={48} />
+            <div class="contact-person-info">
+              <strong>Sander Martinsen</strong>
+              <span class="contact-specialty">System & AI</span>
+              <a href="tel:+4745140089" class="contact-phone"><i class="fas fa-phone"></i> +47 451 40 089</a>
+              <a href="mailto:sander@efffekt.no" class="contact-email"><i class="fas fa-envelope"></i> sander@efffekt.no</a>
+            </div>
+          </div>
+          <div class="contact-person">
+            <Image src={danielImg} alt="Daniel Barlag" class="contact-avatar" width={48} height={48} />
+            <div class="contact-person-info">
+              <strong>Daniel Barlag</strong>
+              <span class="contact-specialty">System & AI</span>
+              <a href="tel:+4798035064" class="contact-phone"><i class="fas fa-phone"></i> +47 980 35 064</a>
+              <a href="mailto:danielbarlag@efffekt.no" class="contact-email"><i class="fas fa-envelope"></i> danielbarlag@efffekt.no</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form reveal" action="https://formsubmit.co/sander@efffekt.no" method="POST">
+        <input type="hidden" name="_cc" value="daniel@efffekt.no">
+        <input type="hidden" name="_subject" value="Ny foresporsel fra efffekt.no">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="text" name="_honey" style="display:none">
+        <div class="form-group">
+          <label for="name">Navn</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">E-post</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="project-type">Hva trenger du?</label>
+          <select id="project-type" name="project-type" required>
+            <option value="" disabled selected>Velg type</option>
+            <option value="nettside">Nettside</option>
+            <option value="system">Skreddersydd system</option>
+            <option value="ai">AI-integrasjon</option>
+            <option value="annet">Annet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Beskriv kort hva du trenger</label>
+          <textarea id="message" name="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-full">
+          Send foresporsel
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

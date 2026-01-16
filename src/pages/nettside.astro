@@ -1,0 +1,195 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+// import { Image } from 'astro:assets'; // MIDLERTIDIG SKJULT - MICHAEL
+// import michaelImg from '../assets/michael.jpg'; // MIDLERTIDIG SKJULT - MICHAEL
+
+const faqItems = [
+  {
+    question: "Hvor lang tid tar det å lage en nettside?",
+    answer: "En standard nettside tar vanligvis 1-2 uker fra oppstart til lansering. Du får en fungerende demo innen 2-7 dager som du kan teste før du bestemmer deg."
+  },
+  {
+    question: "Hva er inkludert i prisen?",
+    answer: "Alt du trenger for å komme i gang: Design tilpasset din merkevare, responsivt oppsett for mobil/PC, kontaktskjema, SEO-optimalisering, SSL-sertifikat, og 3 måneder gratis support. Du eier domene og alt innhold selv."
+  },
+  {
+    question: "Trenger jeg å betale månedlig?",
+    answer: "Nei, du betaler en fastpris for selve nettsiden. Eneste løpende kostnad er hosting (ca. 100-200 kr/mnd) og domene (ca. 150 kr/år). Vedlikehold er valgfritt fra 490 kr/mnd hvis du vil at vi oppdaterer for deg."
+  },
+  {
+    question: "Kan jeg oppdatere nettsiden selv?",
+    answer: "Ja! Vi kan sette opp et enkelt CMS (innholdssystem) slik at du kan endre tekst og bilder selv. Alternativt kan du velge vedlikeholdsavtale der vi gjør endringene for deg."
+  },
+  {
+    question: "Hva om jeg ikke liker resultatet?",
+    answer: "Du får en gratis demo først, og betaler ingenting hvis du ikke er fornøyd. Vi starter ikke på full utvikling før du har godkjent demoen."
+  }
+];
+---
+
+<ServiceLayout
+  title="Profesjonell Nettside | Fra 14.900 kr | EFFFEKT"
+  description="Profesjonelle nettsider for norske bedrifter. Fastpris fra 14.900 kr. SEO-optimalisert, responsivt design, og du eier alt selv. Gratis demo."
+  canonical="https://efffekt.no/nettside"
+  serviceName="Profesjonell Nettside"
+  serviceDescription="Profesjonelle nettsider for norske bedrifter. Responsivt design, SEO-optimalisert, kontaktskjema, og rask lasting."
+  price="14900"
+  faqItems={faqItems}
+>
+  <!-- Hero Section -->
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-up">
+        <!-- MIDLERTIDIG SKJULT - MICHAEL: specialist-badge med bilde -->
+        <h1>En nettside som <span class="gradient-text">jobber for deg</span></h1>
+        <p class="service-hero-subtitle">Få flere henvendelser - uten dyre abonnementer eller byråavgifter. Fastpris, og du eier alt selv.</p>
+        <div class="service-hero-prices">
+          <div class="price-box featured">
+            <span class="price-label">Profesjonell nettside</span>
+            <span class="price-amount">Fra 14.900 kr</span>
+            <span class="price-alt">eller fra 549 kr/mnd</span>
+          </div>
+        </div>
+        <a href="#kontakt" class="btn btn-primary btn-large">
+          <i class="fas fa-comments"></i> Book gratis samtale
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section class="service-details">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Hva du <span class="gradient-text">får</span></h2>
+      </div>
+      <div class="included-grid" data-aos="fade-up" data-aos-delay="100">
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-palette"></i></div>
+          <h3>Skreddersydd design</h3>
+          <p>Tilpasset din merkevare og bransje. Ikke en ferdig mal alle andre bruker.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Fungerer overalt</h3>
+          <p>Responsivt design som ser bra ut på mobil, nettbrett og PC.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-search"></i></div>
+          <h3>Google-synlig</h3>
+          <p>SEO-optimalisert slik at kunder faktisk finner deg.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-envelope"></i></div>
+          <h3>Kontaktskjema</h3>
+          <p>Henvendelser sendes rett til din e-post. Enkelt og effektivt.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-bolt"></i></div>
+          <h3>Rask lasting</h3>
+          <p>Optimalisert for hastighet. Ingen venter på trege sider.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-lock"></i></div>
+          <h3>SSL-sertifikat</h3>
+          <p>Hengelås i nettleseren. Trygt for deg og kundene.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Vanlige <span class="gradient-text">spørsmål</span></h2>
+      </div>
+      <div class="faq-list" data-aos="fade-up" data-aos-delay="100">
+        {faqItems.map(item => (
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              <span>{item.question}</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="kontakt" class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-text" data-aos="fade-right">
+          <h2>Klar for en <span class="gradient-text">ny nettside?</span></h2>
+          <p>Ta kontakt for en uforpliktende samtale. Vi svarer innen 24 timer.</p>
+          <div class="contact-trust">
+            <div class="trust-item">
+              <i class="fas fa-gift"></i>
+              <span>Gratis demo først</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Fastpris - ingen overraskelser</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-headset"></i>
+              <span>3 mnd gratis support</span>
+            </div>
+          </div>
+
+          <!-- MIDLERTIDIG SKJULT - MICHAEL: contact-people seksjon -->
+        </div>
+        <div class="contact-form-wrapper" data-aos="fade-left">
+          <form class="contact-form" action="https://formsubmit.co/sander@efffekt.no" method="POST">
+            <input type="hidden" name="_cc" value="daniel@efffekt.no">
+            <input type="hidden" name="_subject" value="Forespørsel: Nettside">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="form-group">
+              <label for="name">Navn *</label>
+              <input type="text" id="name" name="name" required placeholder="Ditt navn">
+            </div>
+            <div class="form-group">
+              <label for="email">E-post *</label>
+              <input type="email" id="email" name="email" required placeholder="din@epost.no">
+            </div>
+            <div class="form-group">
+              <label for="message">Fortell kort om prosjektet</label>
+              <textarea id="message" name="message" rows="3" placeholder="Hva slags nettside trenger du?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large btn-full">
+              <i class="fas fa-paper-plane"></i> Send forespørsel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Services -->
+  <section class="other-services">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Andre <span class="gradient-text">tjenester</span></h2>
+      </div>
+      <div class="other-services-grid" data-aos="fade-up" data-aos-delay="100">
+        <a href="/system" class="other-service-card">
+          <i class="fas fa-laptop-code"></i>
+          <h3>Skreddersydd system</h3>
+          <span class="other-price">Fra 44.900 kr</span>
+        </a>
+        <a href="/ai" class="other-service-card">
+          <i class="fas fa-robot"></i>
+          <h3>AI-integrasjon</h3>
+          <span class="other-price">Fra 9.900 kr</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</ServiceLayout>

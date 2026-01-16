@@ -1,0 +1,52 @@
+---
+// Promo Popup component
+---
+
+<div class="promo-overlay" id="promoOverlay"></div>
+<div class="promo-popup" id="promoPopup">
+  <button class="promo-close" id="promoClose" aria-label="Lukk">
+    <i class="fas fa-times"></i>
+  </button>
+  <span class="promo-badge">Begrenset tilbud</span>
+  <h3>Gratis nettside!</h3>
+  <p>
+    Vi gir de <span class="promo-highlight">5 forste kundene</span> en komplett nettside helt gratis.
+    Ingen skjulte kostnader - vi vil bare vise hva vi kan.
+  </p>
+  <div class="promo-cta">
+    <a href="#kontakt" class="btn btn-primary btn-lg" id="promoCtaBtn">Ja, jeg vil ha gratis nettside</a>
+    <button class="promo-dismiss" id="promoDismiss">Nei takk, ikke na</button>
+  </div>
+</div>
+
+<script>
+  // Promo popup - shows after 5 seconds on every visit
+  (function() {
+    const promoOverlay = document.getElementById('promoOverlay');
+    const promoPopup = document.getElementById('promoPopup');
+    const promoClose = document.getElementById('promoClose');
+    const promoDismiss = document.getElementById('promoDismiss');
+    const promoCtaBtn = document.getElementById('promoCtaBtn');
+
+    function openPopup() {
+      promoOverlay?.classList.add('active');
+      promoPopup?.classList.add('active');
+    }
+
+    function closePopup() {
+      promoOverlay?.classList.remove('active');
+      promoPopup?.classList.remove('active');
+    }
+
+    setTimeout(openPopup, 5000);
+
+    promoClose?.addEventListener('click', closePopup);
+    promoDismiss?.addEventListener('click', closePopup);
+    promoCtaBtn?.addEventListener('click', closePopup);
+    promoOverlay?.addEventListener('click', closePopup);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && promoPopup?.classList.contains('active')) closePopup();
+    });
+  })();
+</script>

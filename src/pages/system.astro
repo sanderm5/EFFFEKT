@@ -1,0 +1,217 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import { Image } from 'astro:assets';
+import sanderImg from '../assets/sander.jpg';
+import danielImg from '../assets/daniel.jpg';
+
+const faqItems = [
+  {
+    question: "Hva koster et skreddersydd system?",
+    answer: "Pris avhenger av kompleksitet, men starter fra 44.900 kr. Vi gir alltid et fast pristilbud før du bestemmer deg, slik at du vet nøyaktig hva det koster."
+  },
+  {
+    question: "Hvor lang tid tar utvikling?",
+    answer: "Et typisk system tar 4-8 uker fra start til ferdig. Du får en fungerende demo innen 2 uker, slik at du kan se retningen før du betaler noe."
+  },
+  {
+    question: "Kan dere integrere med eksisterende systemer?",
+    answer: "Ja! Vi har erfaring med å koble på regnskapssystemer, e-post, kalendere, betalingsløsninger og andre verktøy bedriften din allerede bruker."
+  },
+  {
+    question: "Hvem eier systemet?",
+    answer: "Du eier alt. Kildekode, design, data - alt tilhører deg. Vi gir deg full tilgang og dokumentasjon slik at du aldri er avhengig av oss."
+  },
+  {
+    question: "Hva med vedlikehold og oppdateringer?",
+    answer: "Vi tilbyr vedlikeholdsavtaler fra 990 kr/mnd som inkluderer sikkerhetsoppdateringer, backup og support. Men du kan også vedlikeholde det selv eller bruke andre."
+  }
+];
+---
+
+<ServiceLayout
+  title="Skreddersydd System | Fra 44.900 kr | EFFFEKT"
+  description="Skreddersydde systemløsninger for norske bedrifter. Slutt på Excel-kaos. Kundeoversikt, automatisering og full kontroll. Gratis demo."
+  canonical="https://efffekt.no/system"
+  serviceName="Skreddersydd System"
+  serviceDescription="Skreddersydde systemløsninger for norske bedrifter. Kundeoversikt, automatisering, PDF-generering og dashboard."
+  price="44900"
+  faqItems={faqItems}
+>
+  <!-- Hero Section -->
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-up">
+        <div class="specialist-badge">
+          <Image src={sanderImg} alt="Sander Martinsen" class="specialist-avatar" width={48} height={48} />
+          <Image src={danielImg} alt="Daniel Barlag" class="specialist-avatar" width={48} height={48} />
+          <span class="section-badge">Sander & Daniels spesialitet</span>
+        </div>
+        <h1>Slutt på <span class="gradient-text">Excel-kaos</span></h1>
+        <p class="service-hero-subtitle">Få alt på ett sted. Kundeoversikt, automatiske påminnelser, og full kontroll - uten å tape oversikten.</p>
+        <div class="service-hero-prices">
+          <div class="price-box featured">
+            <span class="price-label">Skreddersydd system</span>
+            <span class="price-amount">Fra 44.900 kr</span>
+          </div>
+        </div>
+        <a href="#kontakt" class="btn btn-primary btn-large">
+          <i class="fas fa-comments"></i> Book gratis samtale
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section class="service-details">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Hva du <span class="gradient-text">får</span></h2>
+      </div>
+      <div class="included-grid" data-aos="fade-up" data-aos-delay="100">
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-users"></i></div>
+          <h3>Kunde- og prosjektoversikt</h3>
+          <p>All informasjon samlet på ett sted. Søk, filtrer og finn det du trenger raskt.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-bell"></i></div>
+          <h3>Automatiske varsler</h3>
+          <p>Påminnelser for forfall, oppgaver og viktige datoer. Aldri glem noe igjen.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-file-pdf"></i></div>
+          <h3>PDF-generering</h3>
+          <p>Lag rapporter, fakturaer og dokumenter med ett klikk.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Mobilvennlig dashboard</h3>
+          <p>Full tilgang fra mobil og nettbrett. Jobb fra hvor som helst.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-user-lock"></i></div>
+          <h3>Brukerinnlogging og roller</h3>
+          <p>Gi ansatte tilgang til det de trenger. Administrator, bruker, kun lesning.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-plug"></i></div>
+          <h3>Integrasjoner</h3>
+          <p>Koble på e-post, kalender, regnskap og andre verktøy du allerede bruker.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Vanlige <span class="gradient-text">spørsmål</span></h2>
+      </div>
+      <div class="faq-list" data-aos="fade-up" data-aos-delay="100">
+        {faqItems.map(item => (
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              <span>{item.question}</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="kontakt" class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-text" data-aos="fade-right">
+          <h2>Klar for et <span class="gradient-text">nytt system?</span></h2>
+          <p>Ta kontakt for en uforpliktende samtale. Vi svarer innen 24 timer.</p>
+          <div class="contact-trust">
+            <div class="trust-item">
+              <i class="fas fa-gift"></i>
+              <span>Gratis demo først</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Fastpris - ingen overraskelser</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-key"></i>
+              <span>Du eier alt selv</span>
+            </div>
+          </div>
+
+          <div class="contact-people">
+            <h4>Snakk med oss direkte</h4>
+            <div class="contact-person">
+              <Image src={sanderImg} alt="Sander Martinsen" class="contact-avatar" width={48} height={48} />
+              <div class="contact-person-info">
+                <strong>Sander Martinsen</strong>
+                <span class="contact-specialty">System & AI</span>
+                <a href="tel:+4745140089" class="contact-phone"><i class="fas fa-phone"></i> +47 451 40 089</a>
+              </div>
+            </div>
+            <div class="contact-person">
+              <Image src={danielImg} alt="Daniel Barlag" class="contact-avatar" width={48} height={48} />
+              <div class="contact-person-info">
+                <strong>Daniel Barlag</strong>
+                <span class="contact-specialty">System & AI</span>
+                <a href="tel:+4798035064" class="contact-phone"><i class="fas fa-phone"></i> +47 980 35 064</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-wrapper" data-aos="fade-left">
+          <form class="contact-form" action="https://formsubmit.co/sander@efffekt.no" method="POST">
+            <input type="hidden" name="_cc" value="daniel@efffekt.no,michael@efffekt.no">
+            <input type="hidden" name="_subject" value="Forespørsel: Skreddersydd System">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="form-group">
+              <label for="name">Navn *</label>
+              <input type="text" id="name" name="name" required placeholder="Ditt navn">
+            </div>
+            <div class="form-group">
+              <label for="email">E-post *</label>
+              <input type="email" id="email" name="email" required placeholder="din@epost.no">
+            </div>
+            <div class="form-group">
+              <label for="message">Fortell kort om behovet</label>
+              <textarea id="message" name="message" rows="3" placeholder="Hva slags system trenger du?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large btn-full">
+              <i class="fas fa-paper-plane"></i> Send forespørsel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Services -->
+  <section class="other-services">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Andre <span class="gradient-text">tjenester</span></h2>
+      </div>
+      <div class="other-services-grid" data-aos="fade-up" data-aos-delay="100">
+        <a href="/nettside" class="other-service-card">
+          <i class="fas fa-globe"></i>
+          <h3>Profesjonell nettside</h3>
+          <span class="other-price">Fra 14.900 kr</span>
+        </a>
+        <a href="/ai" class="other-service-card">
+          <i class="fas fa-robot"></i>
+          <h3>AI-integrasjon</h3>
+          <span class="other-price">Fra 9.900 kr</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</ServiceLayout>

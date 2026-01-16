@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 50">
+  <defs>
+    <style>
+      .logo-text { font-family: Inter, Arial, sans-serif; font-size: 36px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <!-- E (rød) -->
+  <text x="0" y="38" class="logo-text" fill="#ef4444">E</text>
+
+  <!-- FFF (hvit) -->
+  <text x="26" y="38" class="logo-text" fill="#ffffff">FFF</text>
+
+  <!-- Rød strek gjennom FFF -->
+  <rect x="28" y="22" width="63" height="8" fill="#ef4444"/>
+
+  <!-- E (rød) -->
+  <text x="94" y="38" class="logo-text" fill="#ef4444">E</text>
+
+  <!-- KT (hvit) og punktum (rød) -->
+  <text x="120" y="38" class="logo-text" fill="#ffffff">KT</text>
+  <text x="168" y="38" class="logo-text" fill="#ef4444">.</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 64">
+  <!-- FFF med sammenhengende midtstrek -->
+
+  <!-- Hvite F-er -->
+  <g fill="#ffffff">
+    <!-- Første F - vertikal -->
+    <rect x="6" y="10" width="8" height="44"/>
+    <!-- Første F - topp -->
+    <rect x="6" y="10" width="20" height="8"/>
+
+    <!-- Andre F - vertikal -->
+    <rect x="28" y="10" width="8" height="44"/>
+    <!-- Andre F - topp -->
+    <rect x="28" y="10" width="20" height="8"/>
+
+    <!-- Tredje F - vertikal -->
+    <rect x="50" y="10" width="8" height="44"/>
+    <!-- Tredje F - topp (strekker seg ut til høyre) -->
+    <rect x="50" y="10" width="16" height="8"/>
+  </g>
+
+  <!-- RØD FELLES MIDTSTREK som binder alle F-ene -->
+  <rect x="6" y="28" width="60" height="8" fill="#ef4444"/>
+</svg>

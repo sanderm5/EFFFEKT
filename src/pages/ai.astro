@@ -1,0 +1,218 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import { Image } from 'astro:assets';
+import sanderImg from '../assets/sander.jpg';
+import danielImg from '../assets/daniel.jpg';
+
+const faqItems = [
+  {
+    question: "Hva kan AI faktisk gjøre for min bedrift?",
+    answer: "AI kan automatisere repetitive oppgaver som å svare på kundehenvendelser, sortere e-post, generere dokumenter, og søke i bedriftens data. Konkret sparer dette typisk 10+ timer per uke."
+  },
+  {
+    question: "Er det trygt å bruke AI med kundedata?",
+    answer: "Ja! Vi setter opp alt GDPR-vennlig. Data forblir i Norge/EU, og vi bruker kun sikre, dokumenterte løsninger. Ingen data sendes til tredjeparter uten din godkjenning."
+  },
+  {
+    question: "Trenger jeg teknisk kompetanse?",
+    answer: "Nei. Vi lager brukergrensesnitt som er like enkle å bruke som vanlige apper. Du trenger ikke kode eller teknisk bakgrunn - bare fortelle AI hva du vil."
+  },
+  {
+    question: "Kan AI integreres med systemene vi allerede har?",
+    answer: "Ja! Vi har erfaring med å koble AI til CRM-systemer, e-post, kundesystemer og nettsider. AI-en kan bruke data fra dine eksisterende løsninger."
+  },
+  {
+    question: "Hva koster AI-løsninger?",
+    answer: "Engangsoppsett fra 9.900 kr + eventuelle månedlige API-kostnader (typisk 200-1000 kr/mnd avhengig av bruk). Du får et fast pristilbud før vi starter."
+  }
+];
+---
+
+<ServiceLayout
+  title="AI-integrasjon | Fra 9.900 kr | EFFFEKT"
+  description="AI-løsninger for norske bedrifter. Chatbot, automatisering og smart dokumenthåndtering. Spar 10+ timer i uka. GDPR-vennlig."
+  canonical="https://efffekt.no/ai"
+  serviceName="AI-integrasjon"
+  serviceDescription="AI-løsninger for norske bedrifter. Chatbot, automatisering, smart dokumentgenerering og naturlig språk-søk."
+  price="9900"
+  faqItems={faqItems}
+>
+  <!-- Hero Section -->
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-up">
+        <div class="specialist-badge">
+          <Image src={sanderImg} alt="Sander Martinsen" class="specialist-avatar" width={48} height={48} />
+          <Image src={danielImg} alt="Daniel Barlag" class="specialist-avatar" width={48} height={48} />
+          <span class="section-badge">Sander & Daniels spesialitet</span>
+        </div>
+        <h1>AI som <span class="gradient-text">faktisk hjelper</span></h1>
+        <p class="service-hero-subtitle">Spar 10+ timer i uka. La AI svare kunder, sortere henvendelser og generere dokumenter - mens du fokuserer på det viktige.</p>
+        <div class="service-hero-prices">
+          <div class="price-box featured">
+            <span class="price-label">AI-integrasjon</span>
+            <span class="price-amount">Fra 9.900 kr</span>
+            <span class="price-alt">eller fra 799 kr/mnd</span>
+          </div>
+        </div>
+        <a href="#kontakt" class="btn btn-primary btn-large">
+          <i class="fas fa-comments"></i> Book gratis samtale
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section class="service-details">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Hva du <span class="gradient-text">får</span></h2>
+      </div>
+      <div class="included-grid" data-aos="fade-up" data-aos-delay="100">
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-robot"></i></div>
+          <h3>Chatbot 24/7</h3>
+          <p>AI som svarer kunder når som helst. Basert på din bedrifts informasjon.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-sort"></i></div>
+          <h3>Automatisk sortering</h3>
+          <p>Henvendelser kategoriseres og prioriteres automatisk. Viktige saker får først.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-file-alt"></i></div>
+          <h3>Dokumentgenerering</h3>
+          <p>Lag kontrakter, rapporter og e-poster med AI. Spar timer på skrivearbeid.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-search"></i></div>
+          <h3>Naturlig språk-søk</h3>
+          <p>Søk i bedriftens data med vanlige setninger. Finn alt du trenger raskt.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-plug"></i></div>
+          <h3>Integrasjoner</h3>
+          <p>Kobles på nettsiden, CRM, e-post og andre systemer du allerede bruker.</p>
+        </div>
+        <div class="included-item">
+          <div class="included-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>GDPR-vennlig</h3>
+          <p>All data i Norge/EU. Dokumentert og trygt oppsett for norske bedrifter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Vanlige <span class="gradient-text">spørsmål</span></h2>
+      </div>
+      <div class="faq-list" data-aos="fade-up" data-aos-delay="100">
+        {faqItems.map(item => (
+          <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+              <span>{item.question}</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="kontakt" class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-text" data-aos="fade-right">
+          <h2>Klar for <span class="gradient-text">AI?</span></h2>
+          <p>Ta kontakt for en uforpliktende samtale. Vi svarer innen 24 timer.</p>
+          <div class="contact-trust">
+            <div class="trust-item">
+              <i class="fas fa-gift"></i>
+              <span>Gratis demo først</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>GDPR-vennlig oppsett</span>
+            </div>
+            <div class="trust-item">
+              <i class="fas fa-clock"></i>
+              <span>Spar 10+ timer/uke</span>
+            </div>
+          </div>
+
+          <div class="contact-people">
+            <h4>Snakk med oss direkte</h4>
+            <div class="contact-person">
+              <Image src={sanderImg} alt="Sander Martinsen" class="contact-avatar" width={48} height={48} />
+              <div class="contact-person-info">
+                <strong>Sander Martinsen</strong>
+                <span class="contact-specialty">System & AI</span>
+                <a href="tel:+4745140089" class="contact-phone"><i class="fas fa-phone"></i> +47 451 40 089</a>
+              </div>
+            </div>
+            <div class="contact-person">
+              <Image src={danielImg} alt="Daniel Barlag" class="contact-avatar" width={48} height={48} />
+              <div class="contact-person-info">
+                <strong>Daniel Barlag</strong>
+                <span class="contact-specialty">System & AI</span>
+                <a href="tel:+4798035064" class="contact-phone"><i class="fas fa-phone"></i> +47 980 35 064</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-wrapper" data-aos="fade-left">
+          <form class="contact-form" action="https://formsubmit.co/sander@efffekt.no" method="POST">
+            <input type="hidden" name="_cc" value="daniel@efffekt.no,michael@efffekt.no">
+            <input type="hidden" name="_subject" value="Forespørsel: AI-integrasjon">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="form-group">
+              <label for="name">Navn *</label>
+              <input type="text" id="name" name="name" required placeholder="Ditt navn">
+            </div>
+            <div class="form-group">
+              <label for="email">E-post *</label>
+              <input type="email" id="email" name="email" required placeholder="din@epost.no">
+            </div>
+            <div class="form-group">
+              <label for="message">Fortell kort om behovet</label>
+              <textarea id="message" name="message" rows="3" placeholder="Hva vil du automatisere med AI?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large btn-full">
+              <i class="fas fa-paper-plane"></i> Send forespørsel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Services -->
+  <section class="other-services">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <h2>Andre <span class="gradient-text">tjenester</span></h2>
+      </div>
+      <div class="other-services-grid" data-aos="fade-up" data-aos-delay="100">
+        <a href="/nettside" class="other-service-card">
+          <i class="fas fa-globe"></i>
+          <h3>Profesjonell nettside</h3>
+          <span class="other-price">Fra 14.900 kr</span>
+        </a>
+        <a href="/system" class="other-service-card">
+          <i class="fas fa-laptop-code"></i>
+          <h3>Skreddersydd system</h3>
+          <span class="other-price">Fra 44.900 kr</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</ServiceLayout>

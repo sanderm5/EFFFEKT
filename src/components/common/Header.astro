@@ -1,0 +1,46 @@
+---
+// Header component with navigation
+---
+
+<header class="header">
+  <div class="container">
+    <nav class="nav">
+      <a href="/" class="logo">
+        <img src="/assets/logo.svg" alt="EFFFEKT" width="291" height="52">
+      </a>
+      <div class="nav-links">
+        <a href="/#scanner">Gratis analyse</a>
+        <a href="/#tjenester">Tjenester</a>
+        <a href="/blogg">Blogg</a>
+        <a href="/#kontakt" class="btn btn-primary btn-sm">Kontakt oss</a>
+      </div>
+      <button class="nav-toggle" aria-label="Meny">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    // Mobile nav toggle
+    navToggle?.addEventListener('click', () => {
+      navLinks?.classList.toggle('active');
+      navToggle.classList.toggle('active');
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      document.querySelector('.header')?.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  }
+
+  // Initialize on page load and View Transitions
+  initHeader();
+  document.addEventListener('astro:page-load', initHeader);
+</script>

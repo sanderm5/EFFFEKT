@@ -1,0 +1,723 @@
+---
+// Scanner section component - Website analysis tool
+---
+
+<section id="scanner" class="section section-dark">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-label">Gratis verktøy</p>
+      <h2>Sjekk nettsiden din <span class="text-accent">nå</span></h2>
+      <p class="section-desc">Få en komplett analyse av hastighet, SEO og mobilvennlighet på sekunder.</p>
+    </div>
+
+    <div class="scanner-box reveal">
+      <form id="scannerForm" class="scanner-form">
+        <label for="scannerUrl" class="sr-only">Skriv inn nettadresse</label>
+        <input type="text" id="scannerUrl" placeholder="dinside.no" required>
+        <button type="submit" class="btn btn-primary btn-lg">
+          <span class="btn-text">Analyser gratis</span>
+          <span class="btn-loading"><i class="fas fa-spinner fa-spin"></i> Analyserer...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Resultater (skjult til skanning er ferdig) -->
+    <div id="scannerResults" class="scanner-results" style="display: none;">
+      <!-- Fylles dynamisk med JavaScript -->
+    </div>
+  </div>
+</section>
+
+<script>
+  // Scanner functionality
+  const analysisSteps = [
+    { icon: 'fa-server', text: 'Kobler til server...' },
+    { icon: 'fa-tachometer-alt', text: 'Analyserer hastighet...' },
+    { icon: 'fa-search', text: 'Sjekker SEO-elementer...' },
+    { icon: 'fa-shield-alt', text: 'Evaluerer sikkerhet...' },
+    { icon: 'fa-mobile-alt', text: 'Tester mobilvennlighet...' },
+    { icon: 'fa-universal-access', text: 'Kontrollerer tilgjengelighet...' },
+    { icon: 'fa-chart-line', text: 'Beregner total score...' }
+  ];
+
+  function showAnalysisProgress(resultsDiv: HTMLElement) {
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = `
+      <div class="analysis-progress">
+        <h4>Analyserer nettsiden din...</h4>
+        <div class="progress-steps">
+          ${analysisSteps.map((step, i) => `
+            <div class="progress-step" data-step="${i}">
+              <i class="fas ${step.icon}"></i>
+              <span>${step.text}</span>
+              <i class="fas fa-check step-check"></i>
+            </div>
+          `).join('')}
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill"></div>
+        </div>
+      </div>
+    `;
+
+    // Animate steps
+    let currentStep = 0;
+    const stepElements = resultsDiv.querySelectorAll('.progress-step');
+    const progressBar = resultsDiv.querySelector('.progress-bar-fill') as HTMLElement;
+
+    function activateStep() {
+      if (currentStep < stepElements.length) {
+        // Complete previous step
+        if (currentStep > 0) {
+          stepElements[currentStep - 1].classList.remove('active');
+          stepElements[currentStep - 1].classList.add('complete');
+        }
+        // Activate current step
+        stepElements[currentStep].classList.add('active');
+        // Update progress bar
+        const progress = ((currentStep + 1) / stepElements.length) * 100;
+        progressBar.style.width = progress + '%';
+        currentStep++;
+      }
+    }
+
+    // Start animation
+    activateStep();
+    const stepInterval = setInterval(() => {
+      activateStep();
+      if (currentStep >= stepElements.length) {
+        clearInterval(stepInterval);
+      }
+    }, 700);
+
+    return stepInterval;
+  }
+
+  document.getElementById('scannerForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    let url = (document.getElementById('scannerUrl') as HTMLInputElement).value.trim();
+    const resultsDiv = document.getElementById('scannerResults') as HTMLElement;
+
+    // Auto-add https:// if missing
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+
+    form.classList.add('loading');
+
+    // Show progress animation
+    const progressInterval = showAnalysisProgress(resultsDiv);
+
+    try {
+      const response = await fetch(`/api/analyze?url=${encodeURIComponent(url)}`);
+      const data = await response.json();
+
+      clearInterval(progressInterval);
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Small delay to let progress complete visually
+      setTimeout(() => {
+        displayResults(data);
+      }, 500);
+    } catch (error: any) {
+      clearInterval(progressInterval);
+      resultsDiv.style.display = 'block';
+      resultsDiv.innerHTML = `
+        <div class="scanner-error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>${error.message || 'Kunne ikke analysere nettsiden. Sjekk at URLen er korrekt og prøv igjen.'}</p>
+        </div>
+      `;
+      form.classList.remove('loading');
+    }
+  });
+
+  function displayResults(data: any) {
+    const resultsDiv = document.getElementById('scannerResults') as HTMLElement;
+    const form = document.getElementById('scannerForm') as HTMLFormElement;
+    form.classList.remove('loading');
+    resultsDiv.style.display = 'block';
+
+    // Count issues by severity
+    const allDetails = Object.values(data.categories).flatMap((cat: any) => cat.details || []);
+    const criticalCount = allDetails.filter((d: any) => d.severity === 'critical').length;
+    const warningCount = allDetails.filter((d: any) => d.severity === 'warning').length;
+    const successCount = allDetails.filter((d: any) => d.type === 'success').length;
+
+    // Generate quick wins
+    const quickWins = generateQuickWins(data);
+
+    // Calculate potential score
+    const potentialScore = Math.min(95, data.totalScore + Math.min(25, criticalCount * 8 + warningCount * 3));
+
+    // Find weak areas for messaging
+    const weakAreas = Object.entries(data.categories)
+      .filter(([k, v]: [string, any]) => v.score < 70)
+      .map(([k, v]) => getCategoryLabel(k));
+
+    resultsDiv.innerHTML = `
+      <button class="scanner-close" onclick="document.getElementById('scannerResults').style.display='none'">
+        <i class="fas fa-times"></i> Lukk resultater
+      </button>
+      <div class="score-overview">
+        <div class="score-circle ${getColorClass(data.totalScore)} animating">
+          <span class="score-number">0</span>
+        </div>
+        <p>Total score av 100</p>
+        <div class="score-summary">
+          ${criticalCount > 0 ? `<span class="issue-badge critical">${criticalCount} kritiske</span>` : ''}
+          ${warningCount > 0 ? `<span class="issue-badge warning">${warningCount} advarsler</span>` : ''}
+          ${successCount > 0 ? `<span class="issue-badge success">${successCount} godkjent</span>` : ''}
+        </div>
+      </div>
+
+      <div class="score-feedback ${getColorClass(data.totalScore)}">
+        <div class="feedback-icon">${getFeedbackIcon(data.totalScore)}</div>
+        <div class="feedback-content">
+          <h4>${getFeedbackTitle(data.totalScore)}</h4>
+          <p>${generateFeedback(data)}</p>
+        </div>
+      </div>
+
+      <div class="score-categories with-rings">
+        ${Object.entries(data.categories).map(([key, val]: [string, any]) => `
+          <div class="score-category" data-category="${key}" onclick="filterByCategory('${key}')">
+            <div class="category-ring-container">
+              <svg class="category-ring" viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="36"></circle>
+                <circle class="ring-progress ${val.status}" cx="40" cy="40" r="36" data-score="${val.score}"></circle>
+              </svg>
+              <span class="category-ring-value">${val.score}</span>
+            </div>
+            <div class="score-category-label">${getCategoryLabel(key)}</div>
+            <div class="score-category-desc">${getCategoryDesc(key)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      ${quickWins.length > 0 ? `
+      <div class="quick-wins">
+        <h3><i class="fas fa-bolt"></i> Raskeste forbedringer</h3>
+        <p class="quick-wins-subtitle">Disse endringene gir størst effekt med minst innsats</p>
+        <div class="quick-wins-list">
+          ${quickWins.slice(0, 5).map((win: any) => `
+            <div class="quick-win-item">
+              <div class="quick-win-icon">
+                ${getCategoryIcon(win.category)}
+              </div>
+              <div class="quick-win-content">
+                <p>${win.message}</p>
+                <div class="quick-win-meta">
+                  <span><i class="fas fa-clock"></i> ${win.fixTime}</span>
+                  <span class="${win.impact === 'Høy' ? 'high-impact' : ''}"><i class="fas fa-chart-line"></i> ${win.impact} effekt</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      ` : ''}
+
+      ${data.benchmarks ? `
+      <div class="benchmark-comparison">
+        <h4><i class="fas fa-chart-bar"></i> Sammenligning med norsk gjennomsnitt</h4>
+        <div class="benchmark-bars">
+          ${Object.entries(data.categories).map(([key, val]: [string, any]) => `
+            <div class="benchmark-row">
+              <span class="benchmark-label">${getCategoryLabel(key)}</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar yours" style="width: ${val.score}%">
+                  <span>Du: ${val.score}</span>
+                </div>
+                <div class="benchmark-bar average" style="width: ${val.benchmark}%">
+                  <span>Snitt: ${val.benchmark}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      ` : ''}
+
+      ${data.totalScore < 85 ? `
+      <div class="improvement-potential">
+        <div class="potential-visual">
+          <div class="potential-score potential-current">
+            <span class="score-value">${data.totalScore}</span>
+            <span class="score-label">Nå</span>
+          </div>
+          <div class="potential-arrow">
+            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          <div class="potential-score potential-target">
+            <span class="score-value">${potentialScore}</span>
+            <span class="score-label">Potensial</span>
+          </div>
+        </div>
+        <div class="potential-content">
+          <h4>Vi kan løfte scoren din med opptil ${potentialScore - data.totalScore} poeng</h4>
+          <p>Basert på analysen kan vi forbedre ${weakAreas.length > 0 ? weakAreas.join(', ').toLowerCase() : 'flere områder'} som direkte påvirker synlighet og konvertering.</p>
+          <a href="#kontakt" class="btn btn-primary">Få gratis forbedringsplan</a>
+        </div>
+      </div>
+      ` : ''}
+
+      <div class="scanner-filters">
+        <button class="filter-btn active" onclick="filterResults('all')">
+          <i class="fas fa-list"></i> Vis alle
+        </button>
+        ${criticalCount > 0 ? `
+        <button class="filter-btn filter-critical" onclick="filterResults('critical')">
+          <i class="fas fa-times-circle"></i> Kun kritiske (${criticalCount})
+        </button>
+        ` : ''}
+        ${warningCount > 0 ? `
+        <button class="filter-btn filter-warning" onclick="filterResults('warning')">
+          <i class="fas fa-exclamation-triangle"></i> Kun advarsler (${warningCount})
+        </button>
+        ` : ''}
+        ${successCount > 0 ? `
+        <button class="filter-btn filter-success" onclick="filterResults('success')">
+          <i class="fas fa-check-circle"></i> Kun godkjent (${successCount})
+        </button>
+        ` : ''}
+      </div>
+
+      <div class="scanner-details">
+        <h3><i class="fas fa-clipboard-list"></i> Detaljert analyse <span class="filter-label"></span></h3>
+        ${Object.entries(data.categories).map(([key, val]: [string, any]) => `
+          <div class="detail-section collapsible" data-category="${key}">
+            <div class="detail-header" onclick="toggleDetailSection(this)">
+              <span class="detail-icon">${getCategoryIcon(key)}</span>
+              <span class="detail-title">${getCategoryLabel(key)}</span>
+              <span class="detail-score ${val.status}">${val.score}/100</span>
+            </div>
+            <div class="detail-items">
+              ${(val.details || []).map((detail: any) => `
+                <div class="detail-item ${detail.severity || detail.type}" data-severity="${detail.severity || detail.type}">
+                  <span class="detail-item-icon">${getDetailIcon(detail)}</span>
+                  <span class="detail-item-text">${detail.message}</span>
+                  ${getTooltip(detail.message) ? `
+                  <button class="info-tooltip">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="tooltip-content">
+                      <strong>Hvorfor dette er viktig</strong>
+                      ${getTooltip(detail.message)}
+                    </div>
+                  </button>
+                  ` : ''}
+                </div>
+              `).join('')}
+              ${(val.details || []).length === 0 ? '<div class="detail-item info" data-severity="info"><span class="detail-item-icon"><i class="fas fa-check"></i></span><span class="detail-item-text">Ingen problemer funnet</span></div>' : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="scanner-cta enhanced">
+        <div class="cta-badge">
+          <i class="fas fa-gift"></i> Gratis tilbud
+        </div>
+        <h3>Få en personlig forbedringsplan</h3>
+        <p>Vi går gjennom analysen med deg og lager en konkret plan for å forbedre nettsiden din. Helt gratis, ingen forpliktelser.</p>
+
+        <div class="cta-trust-signals">
+          <div class="trust-signal">
+            <i class="fas fa-clock"></i>
+            <span>15 min uforpliktende samtale</span>
+          </div>
+          <div class="trust-signal">
+            <i class="fas fa-file-alt"></i>
+            <span>Skriftlig rapport inkludert</span>
+          </div>
+          <div class="trust-signal">
+            <i class="fas fa-ban"></i>
+            <span>Ingen bindingstid</span>
+          </div>
+        </div>
+
+        <a href="#kontakt" class="btn btn-primary btn-lg">
+          <i class="fas fa-calendar-check"></i> Book gratis gjennomgang
+        </a>
+      </div>
+    `;
+
+    // Animate score counting
+    const scoreElement = resultsDiv.querySelector('.score-number');
+    if (scoreElement) {
+      animateScore(scoreElement as HTMLElement, data.totalScore);
+    }
+
+    // Animate category rings
+    setTimeout(() => {
+      resultsDiv.querySelectorAll('.ring-progress').forEach((ring: Element) => {
+        const score = parseInt((ring as HTMLElement).dataset.score || '0');
+        const circumference = 2 * Math.PI * 36;
+        const offset = circumference - (score / 100) * circumference;
+        (ring as HTMLElement).style.strokeDashoffset = String(offset);
+      });
+    }, 300);
+
+    // Expand first detail section
+    setTimeout(() => {
+      const firstSection = resultsDiv.querySelector('.detail-section.collapsible');
+      if (firstSection) firstSection.classList.add('expanded');
+    }, 800);
+
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Setup tooltip positioning
+    setupTooltips();
+  }
+
+  // Position tooltips with fixed positioning to avoid overflow issues
+  function setupTooltips() {
+    document.querySelectorAll('.info-tooltip').forEach(btn => {
+      const tooltip = btn.querySelector('.tooltip-content');
+      if (!tooltip) return;
+
+      btn.addEventListener('mouseenter', () => {
+        const rect = btn.getBoundingClientRect();
+        const tooltipWidth = 300;
+
+        // Position above the button, centered
+        let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+        let top = rect.top - 10;
+
+        // Keep within viewport
+        if (left < 10) left = 10;
+        if (left + tooltipWidth > window.innerWidth - 10) {
+          left = window.innerWidth - tooltipWidth - 10;
+        }
+
+        (tooltip as HTMLElement).style.left = left + 'px';
+        (tooltip as HTMLElement).style.bottom = (window.innerHeight - top) + 'px';
+        (tooltip as HTMLElement).style.top = 'auto';
+      });
+    });
+  }
+
+  // Animate score counting up
+  function animateScore(element: HTMLElement, targetScore: number, duration = 1500) {
+    let startTime: number | null = null;
+    const startScore = 0;
+
+    function animate(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentScore = Math.round(startScore + (targetScore - startScore) * easeOut);
+      element.textContent = String(currentScore);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // Toggle collapsible detail sections
+  (window as any).toggleDetailSection = function(header: HTMLElement) {
+    const section = header.parentElement;
+    section?.classList.toggle('expanded');
+  }
+
+  // Generate quick wins from analysis data
+  function generateQuickWins(data: any) {
+    const quickWins: any[] = [];
+
+    const fixTimeMap: Record<string, string> = {
+      'title': '5 min',
+      'meta description': '5 min',
+      'alt': '10 min',
+      'H1': '5 min',
+      'viewport': '2 min',
+      'HTTPS': '30 min',
+      'canonical': '5 min',
+      'lang': '2 min',
+      'Open Graph': '15 min',
+      'lazy': '15 min',
+      'async': '10 min',
+      'defer': '10 min'
+    };
+
+    const impactMap: Record<string, string> = {
+      'critical': 'Høy',
+      'warning': 'Medium',
+      'info': 'Lav'
+    };
+
+    Object.entries(data.categories).forEach(([cat, val]: [string, any]) => {
+      (val.details || []).forEach((detail: any) => {
+        if (detail.severity === 'critical' || detail.severity === 'warning') {
+          let fixTime = '15 min';
+          for (const [key, time] of Object.entries(fixTimeMap)) {
+            if (detail.message.toLowerCase().includes(key.toLowerCase())) {
+              fixTime = time;
+              break;
+            }
+          }
+
+          quickWins.push({
+            category: cat,
+            message: detail.message,
+            severity: detail.severity,
+            fixTime: fixTime,
+            impact: impactMap[detail.severity] || 'Medium'
+          });
+        }
+      });
+    });
+
+    // Sort by impact (critical first) then by fix time
+    return quickWins.sort((a, b) => {
+      if (a.severity === 'critical' && b.severity !== 'critical') return -1;
+      if (b.severity === 'critical' && a.severity !== 'critical') return 1;
+      return 0;
+    });
+  }
+
+  // Get tooltip explanation for common issues
+  function getTooltip(message: string): string | null {
+    const tooltips: Record<string, string> = {
+      'title': 'Title-taggen vises i Google-søk og nettleser-faner. En god title øker klikk fra søkeresultater.',
+      'meta description': 'Meta description vises under title i Google. En god beskrivelse øker klikkraten betydelig.',
+      'H1': 'H1-overskriften forteller Google hva siden handler om. Viktig for rangering på relevante søkeord.',
+      'alt': 'Alt-tekst hjelper søkemotorer forstå bildene dine og er kritisk for synshemmede brukere.',
+      'HTTPS': 'HTTPS beskytter brukerdata og er en rangeringsfaktor i Google. Uten HTTPS vises "Ikke sikker" i nettleseren.',
+      'viewport': 'Viewport-meta sikrer at siden vises korrekt på mobil. Uten den vil siden zoomes ut og være vanskelig å bruke.',
+      'canonical': 'Canonical URL forteller Google hvilken versjon av siden som er "hovedversjonen" og unngår duplikatinnhold.',
+      'Open Graph': 'Open Graph-tags bestemmer hvordan siden ser ut når den deles på Facebook, LinkedIn og andre sosiale medier.',
+      'lazy': 'Lazy loading utsetter lasting av bilder til de trengs, noe som gjør siden mye raskere.',
+      'responstid': 'Server-responstid påvirker både brukeropplevelse og Google-rangering. Trege sider mister besøkende.',
+      'render-blokkerende': 'Render-blokkerende scripts stopper siden fra å vises til de er lastet. Async/defer løser dette.'
+    };
+
+    for (const [key, tooltip] of Object.entries(tooltips)) {
+      if (message.toLowerCase().includes(key.toLowerCase())) {
+        return tooltip;
+      }
+    }
+    return null;
+  }
+
+  function getColorClass(score: number): string {
+    if (score >= 90) return 'green';
+    if (score >= 70) return 'yellow';
+    if (score >= 50) return 'orange';
+    return 'red';
+  }
+
+  function getFeedbackIcon(score: number): string {
+    if (score >= 90) return '<i class="fas fa-trophy"></i>';
+    if (score >= 70) return '<i class="fas fa-thumbs-up"></i>';
+    if (score >= 50) return '<i class="fas fa-exclamation-circle"></i>';
+    return '<i class="fas fa-times-circle"></i>';
+  }
+
+  function getFeedbackTitle(score: number): string {
+    if (score >= 90) return 'Utmerket! Nettsiden din er i toppklasse';
+    if (score >= 70) return 'Bra jobbet! Men det er rom for forbedring';
+    if (score >= 50) return 'Nettsiden trenger oppmerksomhet';
+    return 'Kritisk! Nettsiden har alvorlige mangler';
+  }
+
+  function generateFeedback(data: any): string {
+    const categories = data.categories;
+    const weakAreas: any[] = [];
+    const strongAreas: string[] = [];
+    const okAreas: any[] = [];
+
+    // Finn svake, ok og sterke områder
+    Object.entries(categories).forEach(([key, val]: [string, any]) => {
+      const label = getCategoryLabel(key);
+      if (val.score < 50) {
+        weakAreas.push({ label, score: val.score, priority: 'critical' });
+      } else if (val.score < 70) {
+        weakAreas.push({ label, score: val.score, priority: 'warning' });
+      } else if (val.score < 90) {
+        okAreas.push({ label, score: val.score });
+      } else {
+        strongAreas.push(label);
+      }
+    });
+
+    // Sorter svake områder etter score (lavest først)
+    weakAreas.sort((a, b) => a.score - b.score);
+
+    let feedback = '';
+
+    if (data.totalScore >= 90) {
+      feedback = 'Gratulerer! Nettsiden din scorer høyt på alle viktige områder. ';
+      if (strongAreas.length > 0) {
+        feedback += `Spesielt bra på ${strongAreas.slice(0, 2).join(' og ')}.`;
+      }
+      feedback += ' Fortsett det gode arbeidet og hold siden oppdatert.';
+    } else if (data.totalScore >= 70) {
+      feedback = 'Nettsiden din presterer bra totalt sett. ';
+      if (weakAreas.length > 0) {
+        feedback += `${weakAreas.map((w: any) => w.label).join(' og ')} kan forbedres for enda bedre resultater.`;
+      } else if (okAreas.length > 0) {
+        feedback += `Små justeringer på ${okAreas.slice(0, 2).map((a: any) => a.label.toLowerCase()).join(' og ')} kan løfte siden til toppnivå.`;
+      } else {
+        feedback += 'Fortsett å vedlikeholde siden for å beholde de gode resultatene.';
+      }
+    } else if (data.totalScore >= 50) {
+      feedback = 'Nettsiden din har flere områder som trenger forbedring. ';
+      if (weakAreas.length > 0) {
+        const criticalAreas = weakAreas.filter((w: any) => w.priority === 'critical');
+        if (criticalAreas.length > 0) {
+          feedback += `${criticalAreas.map((w: any) => w.label).join(' og ')} krever oppmerksomhet. `;
+        } else {
+          feedback += `${weakAreas.map((w: any) => w.label).join(' og ')} bør prioriteres. `;
+        }
+        feedback += 'Dette påvirker hvordan kunder finner og opplever siden din.';
+      }
+    } else {
+      feedback = 'Nettsiden din har alvorlige problemer som kan skade virksomheten din. ';
+      if (weakAreas.length > 0) {
+        feedback += `${weakAreas.slice(0, 3).map((w: any) => w.label).join(', ')} scorer kritisk lavt. `;
+      }
+      feedback += 'Vi anbefaler å ta tak i dette så raskt som mulig.';
+    }
+
+    return feedback;
+  }
+
+  function getCategoryLabel(key: string): string {
+    const labels: Record<string, string> = {
+      performance: 'Hastighet',
+      seo: 'SEO',
+      security: 'Sikkerhet',
+      mobile: 'Mobilvennlig',
+      accessibility: 'Tilgjengelighet'
+    };
+    return labels[key] || key;
+  }
+
+  function getCategoryDesc(key: string): string {
+    const descs: Record<string, string> = {
+      performance: 'Hvor raskt siden laster',
+      seo: 'Synlighet i Google-søk',
+      security: 'Beskyttelse mot angrep',
+      mobile: 'Fungerer på telefon/nettbrett',
+      accessibility: 'Brukervennlig for alle'
+    };
+    return descs[key] || '';
+  }
+
+  function getCategoryIcon(key: string): string {
+    const icons: Record<string, string> = {
+      performance: '<i class="fas fa-tachometer-alt"></i>',
+      seo: '<i class="fas fa-search"></i>',
+      security: '<i class="fas fa-shield-alt"></i>',
+      mobile: '<i class="fas fa-mobile-alt"></i>',
+      accessibility: '<i class="fas fa-universal-access"></i>'
+    };
+    return icons[key] || '<i class="fas fa-check"></i>';
+  }
+
+  function getDetailIcon(detail: any): string {
+    if (detail.type === 'success') return '<i class="fas fa-check-circle"></i>';
+    if (detail.severity === 'critical') return '<i class="fas fa-times-circle"></i>';
+    if (detail.severity === 'warning') return '<i class="fas fa-exclamation-triangle"></i>';
+    return '<i class="fas fa-info-circle"></i>';
+  }
+
+  // Filter by category (click on category box)
+  (window as any).filterByCategory = function(category: string) {
+    const sections = document.querySelectorAll('.detail-section');
+    const categoryBoxes = document.querySelectorAll('.score-category');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const filterLabel = document.querySelector('.filter-label');
+
+    // Check if already filtered to this category
+    const isAlreadyFiltered = document.querySelector(`.score-category[data-category="${category}"]`)?.classList.contains('active');
+
+    // Reset all category boxes
+    categoryBoxes.forEach(box => box.classList.remove('active'));
+
+    // Reset filter buttons
+    filterBtns.forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.filter-btn')?.classList.add('active');
+
+    if (isAlreadyFiltered) {
+      // Show all
+      sections.forEach(section => {
+        (section as HTMLElement).style.display = 'block';
+        section.querySelectorAll('.detail-item').forEach(item => (item as HTMLElement).style.display = 'flex');
+      });
+      if (filterLabel) filterLabel.textContent = '';
+    } else {
+      // Filter to specific category
+      categoryBoxes.forEach(box => {
+        if ((box as HTMLElement).dataset.category === category) box.classList.add('active');
+      });
+
+      sections.forEach(section => {
+        if ((section as HTMLElement).dataset.category === category) {
+          (section as HTMLElement).style.display = 'block';
+          section.querySelectorAll('.detail-item').forEach(item => (item as HTMLElement).style.display = 'flex');
+        } else {
+          (section as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (filterLabel) filterLabel.textContent = `- ${getCategoryLabel(category)}`;
+    }
+
+    document.querySelector('.scanner-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Filter by severity (critical, warning, success)
+  (window as any).filterResults = function(severity: string) {
+    const sections = document.querySelectorAll('.detail-section');
+    const items = document.querySelectorAll('.detail-item');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const categoryBoxes = document.querySelectorAll('.score-category');
+    const filterLabel = document.querySelector('.filter-label');
+
+    // Reset category filter
+    categoryBoxes.forEach(box => box.classList.remove('active'));
+
+    // Update active button
+    filterBtns.forEach(btn => btn.classList.remove('active'));
+    (event as any)?.target?.closest('.filter-btn')?.classList.add('active');
+
+    if (severity === 'all') {
+      // Show all
+      sections.forEach(section => (section as HTMLElement).style.display = 'block');
+      items.forEach(item => (item as HTMLElement).style.display = 'flex');
+      if (filterLabel) filterLabel.textContent = '';
+    } else {
+      // Filter by severity
+      const severityLabels: Record<string, string> = {
+        critical: 'Kritiske',
+        warning: 'Advarsler',
+        success: 'Godkjent'
+      };
+      if (filterLabel) filterLabel.textContent = `- ${severityLabels[severity]}`;
+
+      sections.forEach(section => {
+        const matchingItems = section.querySelectorAll(`.detail-item[data-severity="${severity}"]`);
+        const allItems = section.querySelectorAll('.detail-item');
+
+        allItems.forEach(item => {
+          if ((item as HTMLElement).dataset.severity === severity) {
+            (item as HTMLElement).style.display = 'flex';
+          } else {
+            (item as HTMLElement).style.display = 'none';
+          }
+        });
+
+        // Hide section if no matching items
+        (section as HTMLElement).style.display = matchingItems.length > 0 ? 'block' : 'none';
+      });
+    }
+  }
+</script>
