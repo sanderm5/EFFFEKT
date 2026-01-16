@@ -6,7 +6,7 @@
   <div class="container">
     <nav class="nav">
       <a href="/" class="logo">
-        <img src="/assets/logo.svg" alt="EFFFEKT" width="257" height="52">
+        <img src="/assets/logo.svg" alt="EFFFEKT" width="180" height="36">
       </a>
       <div class="nav-links">
         <a href="/#scanner">Gratis analyse</a>
@@ -24,8 +24,18 @@
 
 <script>
   function initHeader() {
+    const header = document.querySelector('.header');
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
+
+    // Mark header as animated after first load (prevents re-animation)
+    if (header && !header.classList.contains('animated')) {
+      header.addEventListener('animationend', () => {
+        header.classList.add('animated');
+      }, { once: true });
+      // Fallback in case animation already completed
+      setTimeout(() => header.classList.add('animated'), 1500);
+    }
 
     // Mobile nav toggle
     navToggle?.addEventListener('click', () => {

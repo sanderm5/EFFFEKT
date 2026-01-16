@@ -9,7 +9,7 @@
   --border-light: rgba(255, 255, 255, 0.18);
   --text: #ffffff;
   --text-secondary: #c8c8d0;
-  --text-muted: #9898a4;
+  --text-muted: #b0b0bc;
   --accent: #ef4444;
   --accent-hover: #dc2626;
   --accent-light: rgba(239, 68, 68, 0.12);
@@ -447,7 +447,7 @@ a {
   transition: all 0.4s var(--ease-out);
 }
 
-/* Header intro animation - lightning strike with reveal */
+/* Header intro animation - lightning strike with reveal (only on first load) */
 .header::before {
   content: '';
   position: absolute;
@@ -460,6 +460,11 @@ a {
   transform: scaleX(0);
   transform-origin: left;
   animation: headerLightning 0.4s cubic-bezier(0.7, 0, 0.3, 1) 0.9s forwards;
+}
+
+.header.animated::before {
+  animation: none;
+  transform: scaleX(1);
 }
 
 @keyframes headerLightning {
@@ -480,6 +485,11 @@ a {
 .header .nav {
   clip-path: inset(0 100% 0 0);
   animation: headerReveal 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.9s forwards;
+}
+
+.header.animated .nav {
+  animation: none;
+  clip-path: inset(0 0 0 0);
 }
 
 @keyframes headerReveal {
@@ -1420,6 +1430,7 @@ a {
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-bottom: 2px;
+  padding: 12px 0;
   transition: color 0.2s;
 }
 
