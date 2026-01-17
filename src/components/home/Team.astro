@@ -41,7 +41,7 @@ const teamMembers = [
       {teamMembers.map((member) => (
         <div class="team-member card-tilt">
           <div class="member-photo image-zoom-container">
-            <Image src={member.image} alt={member.name} width={160} height={160} loading="lazy" />
+            <Image src={member.image} alt={member.name} width={320} height={320} quality={90} loading="lazy" />
           </div>
           <div class="member-info">
             <h3>{member.name}</h3>

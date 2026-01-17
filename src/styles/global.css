@@ -1852,6 +1852,10 @@ a {
 .member-photo {
   flex-shrink: 0;
   margin-bottom: 24px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .member-photo img {
@@ -2600,8 +2604,8 @@ a {
 
 .score-categories {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
   margin-bottom: 40px;
 }
 
@@ -2886,13 +2890,6 @@ a {
   }
 }
 
-/* Scanner - 5 categories grid */
-.score-categories {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-bottom: 40px;
-}
 
 @media (max-width: 900px) {
   .score-categories {
