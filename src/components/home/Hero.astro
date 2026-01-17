@@ -3,6 +3,13 @@
 ---
 
 <section class="hero">
+  <!-- Dekorative parallax-elementer -->
+  <div class="hero-decorations" aria-hidden="true">
+    <div class="hero-circle hero-circle-1 parallax-element" data-parallax-speed="0.15"></div>
+    <div class="hero-circle hero-circle-2 parallax-element" data-parallax-speed="0.25"></div>
+    <div class="hero-circle hero-circle-3 parallax-element" data-parallax-speed="0.1"></div>
+  </div>
+
   <div class="container">
     <div class="hero-content">
       <p class="hero-label">Utviklerteam i Norge</p>
@@ -34,3 +41,56 @@
     </div>
   </div>
 </section>
+
+<style>
+  .hero-decorations {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.06;
+    filter: blur(60px);
+  }
+
+  .hero-circle-1 {
+    width: 500px;
+    height: 500px;
+    background: var(--accent);
+    top: -150px;
+    right: -100px;
+    animation: breathe 8s ease-in-out infinite;
+  }
+
+  .hero-circle-2 {
+    width: 350px;
+    height: 350px;
+    background: var(--accent-secondary);
+    bottom: -100px;
+    left: -80px;
+    animation: breathe 10s ease-in-out 1s infinite;
+  }
+
+  .hero-circle-3 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+    top: 40%;
+    left: 60%;
+    animation: breathe 6s ease-in-out 0.5s infinite;
+  }
+
+  .hero {
+    position: relative;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+</style>

@@ -24,6 +24,9 @@ import PromoPopup from '../components/home/PromoPopup.astro';
 
 <script>
   function initHomePage() {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
@@ -32,7 +35,7 @@ import PromoPopup from '../components/home/PromoPopup.astro';
         if (href) {
           const target = document.querySelector(href);
           if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
             document.querySelector('.nav-links')?.classList.remove('active');
             document.querySelector('.nav-toggle')?.classList.remove('active');
           }
@@ -40,21 +43,38 @@ import PromoPopup from '../components/home/PromoPopup.astro';
       });
     });
 
-    // Scroll reveal animations
-    const revealElements = document.querySelectorAll('.reveal');
+    // Enhanced scroll reveal animations - støtter alle reveal-varianter
+    const revealElements = document.querySelectorAll(
+      '.reveal, .reveal-scale, .reveal-left, .reveal-right, .reveal-mask, .reveal-stagger'
+    );
+
+    // Parallax elementer
+    const parallaxElements = document.querySelectorAll('.parallax-element');
 
     const revealOnScroll = () => {
       const windowHeight = window.innerHeight;
+
+      // Reveal animations
       revealElements.forEach(el => {
         const elementTop = el.getBoundingClientRect().top;
-        const revealPoint = 100;
-        if (elementTop < windowHeight - revealPoint) {
+        const revealPoint = windowHeight * 0.85; // Trigger ved 85% av viewport
+        if (elementTop < revealPoint) {
           el.classList.add('visible');
         }
       });
+
+      // Parallax effect (skip if reduced motion)
+      if (!prefersReducedMotion) {
+        const scrolled = window.scrollY;
+        parallaxElements.forEach(el => {
+          const speed = parseFloat((el as HTMLElement).dataset.parallaxSpeed || '0.5');
+          const yPos = -(scrolled * speed);
+          (el as HTMLElement).style.transform = `translate3d(0, ${yPos}px, 0)`;
+        });
+      }
     };
 
-    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('scroll', revealOnScroll, { passive: true });
     revealOnScroll(); // Run on load
   }
 

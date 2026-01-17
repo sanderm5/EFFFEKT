@@ -3,6 +3,7 @@
 ---
 
 <header class="header">
+  <div class="header-line"></div>
   <div class="container">
     <nav class="nav">
       <a href="/" class="logo">
@@ -24,18 +25,8 @@
 
 <script>
   function initHeader() {
-    const header = document.querySelector('.header');
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
-
-    // Mark header as animated after first load (prevents re-animation)
-    if (header && !header.classList.contains('animated')) {
-      header.addEventListener('animationend', () => {
-        header.classList.add('animated');
-      }, { once: true });
-      // Fallback in case animation already completed
-      setTimeout(() => header.classList.add('animated'), 1500);
-    }
 
     // Mobile nav toggle
     navToggle?.addEventListener('click', () => {

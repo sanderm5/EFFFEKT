@@ -10,7 +10,7 @@ import danielImg from '../../assets/daniel.jpg';
 <section id="kontakt" class="section">
   <div class="container">
     <div class="contact-grid">
-      <div class="contact-info reveal">
+      <div class="contact-info reveal-left">
         <p class="section-label">Ta kontakt</p>
         <h2>La oss snakke om<br>ditt <span class="text-accent">prosjekt</span></h2>
         <p class="contact-text">
@@ -37,13 +37,13 @@ import danielImg from '../../assets/daniel.jpg';
               <strong>Daniel Barlag</strong>
               <span class="contact-specialty">System & AI</span>
               <a href="tel:+4798035064" class="contact-phone"><Icon name="phone" size={14} /> +47 980 35 064</a>
-              <a href="mailto:danielbarlag@efffekt.no" class="contact-email"><Icon name="envelope" size={14} /> danielbarlag@efffekt.no</a>
+              <a href="mailto:daniel@efffekt.no" class="contact-email"><Icon name="envelope" size={14} /> daniel@efffekt.no</a>
             </div>
           </div>
         </div>
       </div>
 
-      <form class="contact-form reveal" action="https://formsubmit.co/sander@efffekt.no" method="POST">
+      <form class="contact-form reveal-right" action="https://formsubmit.co/sander@efffekt.no" method="POST">
         <input type="hidden" name="_cc" value="daniel@efffekt.no">
         <input type="hidden" name="_subject" value="Ny foresporsel fra efffekt.no">
         <input type="hidden" name="_captcha" value="false">
@@ -71,7 +71,7 @@ import danielImg from '../../assets/daniel.jpg';
           <label for="message">Beskriv kort hva du trenger</label>
           <textarea id="message" name="message" rows="4"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg btn-full">
+        <button type="submit" class="btn btn-primary btn-lg btn-full btn-shimmer glow-focus">
           Send foresporsel
         </button>
       </form>
