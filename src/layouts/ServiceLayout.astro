@@ -35,16 +35,14 @@ import '../styles/global.css';
 <!DOCTYPE html>
 <html lang="no" prefix="og: https://ogp.me/ns#">
 <head>
-  <!-- Prevent theme flash -->
+  <!-- Prevent theme flash - dark is default -->
   <script is:inline>
     (function() {
       const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
-      } else if (!prefersDark) {
-        document.documentElement.setAttribute('data-theme', 'light');
       }
+      // Dark theme is default (no attribute needed), only set if explicitly light
     })();
   </script>
   <ClientRouter />

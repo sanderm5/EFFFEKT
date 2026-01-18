@@ -66,13 +66,10 @@ import Icon from '../icons/Icon.astro';
 <script>
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
-    } else if (!prefersDark) {
-      document.documentElement.setAttribute('data-theme', 'light');
     }
+    // Dark theme is default (no attribute needed)
   }
 
   function toggleTheme() {
